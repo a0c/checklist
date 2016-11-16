@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="view_task_edit_form" model="ir.ui.view">
+      <field name="name">task.edit.form</field>
+      <field name="model">task.edit</field>
+      <field name="arch" type="xml">
+        <form string="Edit Task">
+          <group>
+            <field name="description" nolabel="1"/>
+          </group>
+          <footer>
+            <button name="do_save" string="Save" type="object" class="oe_highlight"/>
+            or
+            <button string="Cancel" class="oe_link" special="cancel"/>
+          </footer>
+        </form>
+      </field>
+    </record>
+
+    <act_window name="Edit Task"
+                res_model="task.edit"
+                src_model="project.task"
+                key2="client_action_multi"
+                view_mode="form"
+                view_type="form"
+                target="new"
+                groups="stock.group_stock_user"
+                id="action_task_edit"/>
+
+    <record id="view_task_tree2_edit" model="ir.ui.view">
+      <field name="name">project.task.edit.tree</field>
+      <field name="model">project.task</field>
+      <field name="inherit_id" ref="view_task_tree2"/>
+      <field name="arch" type="xml">
+        <field name="name" position="after">
+          <field name="description"/>
+          <button name="%(action_task_edit)d" string="Edit Description" type="action" icon="gtk-edit" context="{'tracking_disable': True}"/>
+        </field>
+      </field>
+    </record>
+
+  </data>
+</openerp>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data noupdate="1">
+
+    <!-- Checklist Task Stages -->
+
+    <record id="project_tt_unstarted" model="project.task.type">
+      <field name="sequence">0</field>
+      <field name="name">Unstarted</field>
+      <field name="case_default" eval="True"/>
+    </record>
+    <record id="project_tt_started" model="project.task.type">
+      <field name="sequence">10</field>
+      <field name="name">Started</field>
+      <field name="case_default" eval="True"/>
+    </record>
+    <record id="project_tt_done" model="project.task.type">
+      <field name="sequence">20</field>
+      <field name="name">Done</field>
+      <field name="case_default" eval="True"/>
+      <field name="fold" eval="True"/>
+    </record>
+
+  </data>
+</openerp>

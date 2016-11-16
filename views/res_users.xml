@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record id="view_users_aeroo_printers_form_simple_modif" model="ir.ui.view">
+      <field name="name">res.users.form.modif.aeroo.printers</field>
+      <field name="model">res.users</field>
+      <field name="type">form</field>
+      <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+      <field name="arch" type="xml">
+        <group name="preferences" position="after">
+          <group string="Warehouse Preferences">
+            <field name="group_reload_checklists_on_assigning" readonly="0"/>
+          </group>
+        </group>
+      </field>
+    </record>
+  </data>
+</openerp>

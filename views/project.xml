@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="edit_project" model="ir.ui.view">
+      <field name="name">project.project.form</field>
+      <field name="model">project.project</field>
+      <field name="inherit_id" ref="project.edit_project"/>
+      <field name="mode">primary</field>
+      <field name="arch" type="xml">
+        <field name="analytic_account_id" position="after">
+          <field name="task_count_all" invisible="1"/>
+        </field>
+        <field name="user_id" position="attributes">
+          <attribute name="string">Assigned To</attribute>
+        </field>
+        <field name="partner_id" position="after">
+          <newline/>
+          <field name="quant" attrs="{'invisible': [('quant', '=', False)]}"/>
+          <newline/>
+          <field name="template" class="oe_edit_only" attrs="{'invisible': ['|', ('task_count_all', '>', 0), ('quant', '=', False)]}"/>
+          <newline/>
+          <p attrs="{'invisible': [('state', '!=', 'draft')]}" style="color: blue;" colspan="2">
+            <b>
+              <field name="help_msg"/>
+            </b>
+          </p>
+        </field>
+        <group name="group_alias" position="before">
+          <group colspan="4" attrs="{'invisible': [('state', '!=', 'template')]}">
+            <field name="products" widget="many2many_tags"/>
+          </group>
+        </group>
+        <button name="%(project.act_project_project_2_project_task_all)d" position="attributes">
+          <attribute name="type">object</attribute>
+          <attribute name="name">action_tasks_as_list</attribute>
+        </button>
+        <button name="duplicate_template" position="replace"/>
+        <button name="reset_project" position="replace"/>
+      </field>
+    </record>
+
+    <record id="project.open_view_project_all" model="ir.actions.act_window">
+      <field name="context">{'search_default_Current': 1, 'form_view_ref':'project.edit_project'}</field>
+      <field name="domain">[('quant','=',False)]</field>
+    </record>
+
+    <record id="view_task_form2" model="ir.ui.view">
+      <field name="name">project.task.form</field>
+      <field name="model">project.task</field>
+      <field name="inherit_id" ref="project.view_task_form2"/>
+      <field name="arch" type="xml">
+        <field name="project_id" position="attributes">
+          <attribute name="context">{'default_use_tasks':1, 'with_qid':1, 'tasks_as_list': 1}</attribute>
+        </field>
+      </field>
+    </record>
+
+    <menuitem name="Workshop"
+              id="menu_workshop_management"
+              parent="base.menu_main_pm"
+              sequence="10"/>
+
+    <record id="action_view_workshop_job_tasks" model="ir.actions.act_window">
+      <field name="name">Tasks</field>
+      <field name="res_model">project.task</field>
+      <field name="view_mode">tree,kanban,form,calendar,gantt,graph</field>
+      <field name="search_view_id" ref="project.view_task_search_form"/>
+      <field name="context">{
+        'search_default_project_id': [active_id],
+        'default_project_id': active_id,
+        'active_test': False,
+        'tracking_disable': True,
+        }</field>
+    </record>
+
+    <record id="view_project_kanban" model="ir.ui.view">
+      <field name="name">project.project.kanban</field>
+      <field name="model">project.project</field>
+      <field name="inherit_id" ref="project.view_project_kanban"/>
+      <field name="mode">primary</field>
+      <field name="arch" type="xml">
+        <field name="effective_hours" position="before">
+          <field name="sequence"/>
+          <field name="state"/>
+          <field name="template_members"/>
+        </field>
+        <kanban position="attributes">
+          <attribute name="default_group_by">state</attribute>
+        </kanban>
+        <a name="%(project.act_project_project_2_project_task_all)d" position="attributes">
+          <attribute name="name">%(action_view_workshop_job_tasks)d</attribute>
+        </a>
+        <xpath expr="//span[@t-if='record.date.raw_value']" position="after">
+          <div class="oe_dropdown_toggle oe_kanban_bottom_right">
+            <img t-if="record.user_id.raw_value" t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)"
+                 t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+            <i t-if="!record.user_id.raw_value" class="fa fa-users" title="Assign To"></i>
+            <ul class="oe_dropdown_menu">
+              <t t-foreach="record.template_members.raw_value" t-as="member">
+                <li>
+                  <a type="object" name="action_assign_user" t-attf-data-context="{'assignee_id': {{ member }} }" t-att-data-member_id="member">
+                    <img t-att-src="kanban_image('res.users', 'image_small', member)" width="24" height="24" t-att-data-member_id="member"/>
+                    <span/>
+                  </a>
+                </li>
+              </t>
+            </ul>
+          </div>
+        </xpath>
+      </field>
+    </record>
+    <record id="view_project_kanban_reload_on_button" model="ir.ui.view">
+      <field name="name">project.project.kanban</field>
+      <field name="model">project.project</field>
+      <field name="inherit_id" ref="view_project_kanban"/>
+      <field name="groups_id" eval="[(6, 0, [ref('checklist.group_reload_checklists_on_assigning')])]"/>
+      <field name="arch" type="xml">
+        <a name="action_assign_user" position="attributes">
+          <attribute name="t-att-data-reload_on_button">1</attribute>
+        </a>
+      </field>
+    </record>
+
+    <record id="view_project_project_filter" model="ir.ui.view">
+      <field name="name">project.project.select</field>
+      <field name="model">project.project</field>
+      <field name="inherit_id" ref="project.view_project_project_filter"/>
+      <field name="mode">primary</field>
+      <field name="arch" type="xml">
+        <filter name="Current" position="replace">
+          <filter string="New" name="Draft" domain="[('state', '=','draft')]"/>
+          <filter string="In Progress" name="Current" domain="[('state', '=','open')]"/>
+        </filter>
+      </field>
+    </record>
+
+    <record id="open_view_workshop_jobs_all" model="ir.actions.act_window">
+      <field name="name">Checklists</field>
+      <field name="res_model">project.project</field>
+      <field name="view_type">form</field>
+      <field name="domain">['|',('quant','!=',False),('state','=','template')]</field>
+      <field name="view_mode">kanban,tree,form,gantt</field>
+      <field name="view_id" ref="view_project_kanban"/>
+      <field name="search_view_id" ref="view_project_project_filter"/>
+      <field name="context">{
+        'search_default_Draft': 1,
+        'search_default_Current': 1,
+        'form_view_ref': 'checklist.edit_project',
+        'with_qid': 1,
+        'tasks_as_list': 1,
+        'tracking_disable': 1,
+        }</field>
+    </record>
+
+    <menuitem action="open_view_workshop_jobs_all" id="menu_workshop_jobs" parent="menu_workshop_management" sequence="10"/>
+
+    <record id="action_view_workshop_task" model="ir.actions.act_window">
+      <field name="name">Tasks</field>
+      <field name="res_model">project.task</field>
+      <field name="view_mode">tree,kanban,form,calendar,gantt,graph</field>
+      <field name="search_view_id" ref="project.view_task_search_form"/>
+      <field name="context">{'search_default_todo': 1, 'tracking_disable': True}</field>
+    </record>
+    <menuitem action="action_view_workshop_task" id="menu_action_view_workshop_task" parent="menu_workshop_management" sequence="20"/>
+
+    <record id="view_task_tree2" model="ir.ui.view">
+      <field name="name">project.task.tree</field>
+      <field name="model">project.task</field>
+      <field name="inherit_id" ref="project.view_task_tree2"/>
+      <field name="arch" type="xml">
+        <field name="progress" position="after">
+          <field name="show_buttons" invisible="1"/>
+          <button name="action_pause" string="Pause" type="object" icon="gtk-media-pause" attrs="{'invisible': [('show_buttons','!=',1)]}" context="{'tracking_disable': True}"/>
+          <button name="action_start" string="Start" type="object" icon="gtk-media-play" attrs="{'invisible': [('show_buttons','!=',2)]}" context="{'tracking_disable': True}"/>
+          <button name="action_done" string="Done" type="object" icon="gtk-apply" attrs="{'invisible': [('show_buttons','!=',1)]}" context="{'tracking_disable': True}"/>
+        </field>
+        <tree position="attributes">
+          <attribute name="reload_on_button">true</attribute>
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_task_search_form" model="ir.ui.view">
+      <field name="name">project.task.search.form</field>
+      <field name="model">project.task</field>
+      <field name="inherit_id" ref="project.view_task_search_form"/>
+      <field name="arch" type="xml">
+        <filter name="unassigned" position="after">
+          <filter string="To Do" name="todo" domain="[('stage_id.fold', '=', False)]"/>
+        </filter>
+      </field>
+    </record>
+
+    <record id="view_task_form2_create_template" model="ir.ui.view">
+      <field name="name">project.task.form</field>
+      <field name="model">project.task</field>
+      <field name="inherit_id" ref="view_task_form2"/>
+      <field name="mode">primary</field>
+      <field name="arch" type="xml">
+        <field name="project_id" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </field>
+        <field name="stage_id" position="replace"/>
+      </field>
+    </record>
+
+    <record id="action_view_workshop_task_create_template" model="ir.actions.act_window">
+      <field name="name">Create Template Checklist</field>
+      <field name="res_model">project.task</field>
+      <field name="view_mode">tree,kanban,form</field>
+      <field name="search_view_id" ref="project.view_task_search_form"/>
+      <field name="domain">[('active', '=', False), ('project_id', '=', False)]</field>
+      <field name="context">{
+        'default_active': False,
+        'default_user_id': False,
+        'default_reviewer_id': False,
+        'tracking_disable': 1,
+        'form_view_ref': 'checklist.view_task_form2_create_template',
+        }</field>
+    </record>
+    <menuitem action="action_view_workshop_task_create_template" id="menu_action_view_workshop_task_create_template"
+              parent="menu_workshop_management" sequence="30"/>
+
+  </data>
+</openerp>

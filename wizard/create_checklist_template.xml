@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="view_create_checklist_template" model="ir.ui.view">
+      <field name="name">Create Checklist Template</field>
+      <field name="model">create.checklist.template</field>
+      <field name="arch" type="xml">
+        <form string="Create Checklist Template">
+          <group>
+            <field name="name"/>
+            <field name="partner"/>
+          </group>
+          <footer>
+            <button name="create_checklist_template" string="Create" type="object" class="oe_highlight"/>
+            <button name="create_checklist_template" string="Create &amp; Open" type="object" class="oe_highlight" context="{'open_checklist_template': True}"/>
+            or
+            <button string="Cancel" class="oe_link" special="cancel"/>
+          </footer>
+        </form>
+      </field>
+    </record>
+
+    <act_window name="Create Checklist Template"
+                res_model="create.checklist.template"
+                src_model="project.task"
+                key2="client_action_multi"
+                view_mode="form"
+                view_type="form"
+                target="new"
+                context="{'tracking_disable': True}"
+                id="action_create_checklist_template"/>
+
+  </data>
+</openerp>

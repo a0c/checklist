@@ -14,6 +14,11 @@
       <field name="name">Started</field>
       <field name="case_default" eval="True"/>
     </record>
+    <record id="project_tt_skipped" model="project.task.type">
+      <field name="sequence">25</field>
+      <field name="name">Skipped</field>
+      <field name="case_default" eval="True"/>
+    </record>
 
   </data>
 </openerp>

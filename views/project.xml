@@ -180,10 +180,13 @@
       <field name="inherit_id" ref="project.view_task_tree2"/>
       <field name="arch" type="xml">
         <field name="progress" position="after">
-          <field name="show_buttons" invisible="1"/>
-          <button name="action_pause" string="Pause" type="object" icon="gtk-media-pause" attrs="{'invisible': [('show_buttons','!=',1)]}" context="{'tracking_disable': True}"/>
-          <button name="action_start" string="Start" type="object" icon="gtk-media-play" attrs="{'invisible': [('show_buttons','!=',2)]}" context="{'tracking_disable': True}"/>
-          <button name="action_done" string="Done" type="object" icon="gtk-apply" attrs="{'invisible': [('show_buttons','!=',1)]}" context="{'tracking_disable': True}"/>
+          <field name="show_button_start" invisible="1"/>
+          <field name="show_button_done" invisible="1"/>
+          <field name="show_button_skip" invisible="1"/>
+          <button name="action_pause" string="Pause" type="object" icon="gtk-media-pause" attrs="{'invisible': [('show_button_done','=',False)]}" context="{'tracking_disable': True}"/>
+          <button name="action_skip" string="Skip" type="object" icon="gtk-media-forward" attrs="{'invisible': [('show_button_skip','=',False)]}" context="{'tracking_disable': True}"/>
+          <button name="action_start" string="Start" type="object" icon="gtk-media-play" attrs="{'invisible': [('show_button_start','=',False)]}" context="{'tracking_disable': True}"/>
+          <button name="action_done" string="Done" type="object" icon="gtk-apply" attrs="{'invisible': [('show_button_done','=',False)]}" context="{'tracking_disable': True}"/>
         </field>
         <tree position="attributes">
           <attribute name="reload_on_button">true</attribute>

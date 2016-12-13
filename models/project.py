@@ -139,7 +139,9 @@ class project(models.Model):
 class task(models.Model):
     _inherit = 'project.task'
 
-    show_buttons = fields.Integer(compute='_show_buttons')
+    show_button_start = fields.Boolean(compute='_show_buttons')
+    show_button_done = fields.Boolean(compute='_show_buttons')
+    show_button_skip = fields.Boolean(compute='_show_buttons')
     next_task = fields.Many2one('project.task', compute='_next_task')
 
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
@@ -163,17 +165,18 @@ class task(models.Model):
             self.env.ref('project.project_tt_deployment'),
             self.env.ref('checklist.project_tt_started'),
             self.env.ref('checklist.project_tt_unstarted'),
+            self.env.ref('checklist.project_tt_skipped'),
         ]
 
     def _show_buttons(self):
-        done, started, unstarted = self._get_checklist_stages()
+        done, started, unstarted, skipped = self._get_checklist_stages()
         for x in self:
             # hide buttons on predefined/template tasks
             if not x.active:
                 continue
-            start = x.sequence == 0 and x.stage_id == unstarted or x.stage_id == started and x.work_ids and x.work_ids[0].hours
-            done = x.stage_id == started and x.work_ids and not x.work_ids[0].hours
-            x.show_buttons = start and 2 or done and 1 or 0
+            x.show_button_start = x.sequence == 0 and x.stage_id == unstarted or x.stage_id == started and x.work_ids and x.work_ids[0].hours
+            x.show_button_done = x.stage_id == started and x.work_ids and not x.work_ids[0].hours
+            x.show_button_skip = x.stage_id != skipped and (x.show_button_start or x.show_button_done)
 
     def _next_task(self):
         for x in self:
@@ -207,21 +210,30 @@ class task(models.Model):
     @api.multi
     def action_pause(self):
         end = datetime.now()
-        for x in self:
+        for x in self.filtered(lambda x: x.work_ids):
             start = prs(x.work_ids[0].date)
             x.work_ids[0].hours = diff(start, end).total_seconds() / 3600
 
     @api.multi
+    def action_skip(self):
+        skipped = self.env.ref('checklist.project_tt_skipped')
+        self.with_context(stage=skipped.id).action_done()
+        self.mapped('work_ids').unlink()
+
+    @api.multi
     def action_done(self):
-        done, started, _ = self._get_checklist_stages()
+        done, started, _, _ = self._get_checklist_stages()
+        vals = {'stage_id': self._context.get('stage', done.id)}
+        if self._context.get('notes') is not None:
+            vals['notes'] = self._context['notes']
         for x in self:
-            end = fmt(datetime.now())
+            vals['date_end'] = fmt(datetime.now())
             x.action_pause()
-            x.write({'stage_id': done.id, 'date_end': end})
+            x.write(vals)
             if x.next_task:
                 x.next_task.start_task(started)
             else:
-                x.project_id.write({'state': 'close', 'date': end})
+                x.project_id.write({'state': 'close', 'date': vals['date_end']})
                 # todo: TMP DISABLED
                 # x._move_quant_to_runup()
         return True

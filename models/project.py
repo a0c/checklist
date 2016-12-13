@@ -157,8 +157,11 @@ class task(models.Model):
 
     @api.model
     def _get_checklist_stages(self):
-        return [self.env.ref('checklist.' + st) for st in
-                'project_tt_done', 'project_tt_started', 'project_tt_unstarted']
+        return [
+            self.env.ref('project.project_tt_deployment'),
+            self.env.ref('checklist.project_tt_started'),
+            self.env.ref('checklist.project_tt_unstarted'),
+        ]
 
     def _show_buttons(self):
         done, started, unstarted = self._get_checklist_stages()

@@ -5,3 +5,5 @@ import ir_values
 import stock
 import res_users
 import project
+
+import migration

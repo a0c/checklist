@@ -20,6 +20,7 @@ Checklists TMP
         'wizard/workshop_quants.xml',
         'wizard/task_edit.xml',
         'wizard/create_checklist_template.xml',
+        'views/migration.xml',
     ],
     'qweb': [
     ],

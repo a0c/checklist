@@ -131,6 +131,7 @@
         <filter name="Current" position="replace">
           <filter string="New" name="Draft" domain="[('state', '=','draft')]"/>
           <filter string="In Progress" name="Current" domain="[('state', '=','open')]"/>
+          <filter string="Completed" name="Completed" domain="[('state', '=','completed')]"/>
         </filter>
       </field>
     </record>
@@ -146,6 +147,7 @@
       <field name="context">{
         'search_default_Draft': 1,
         'search_default_Current': 1,
+        'search_default_Completed': 1,
         'form_view_ref': 'checklist.edit_project',
         'with_qid': 1,
         'tasks_as_list': 1,

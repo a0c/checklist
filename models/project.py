@@ -21,6 +21,7 @@ class project(models.Model):
     dest_project = fields.Many2one('project.project', compute='_dest_project')
     task_count_all = fields.Integer(compute='_task_count_all')
     help_msg = fields.Text(compute='_help_msg')
+    state = fields.Selection(selection_add=[('completed', 'Completed')])
 
     def _dest_project(self):
         for x in self:

@@ -58,6 +58,9 @@
         <field name="project_id" position="attributes">
           <attribute name="context">{'default_use_tasks':1, 'with_qid':1, 'tasks_as_list': 1}</attribute>
         </field>
+        <field name="description" position="after">
+          <field name="notes" placeholder="Add a Note..."/>
+        </field>
       </field>
     </record>
 

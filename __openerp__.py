@@ -9,7 +9,7 @@ Checklists TMP
 ==============
 """,
     'depends': [
-        'base', 'stock', 'project'
+        'base', 'stock', 'project', 'document'
     ],
     'data': [
         'security/security.xml',

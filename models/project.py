@@ -22,6 +22,7 @@ class project(models.Model):
     task_count_all = fields.Integer(compute='_task_count_all')
     help_msg = fields.Text(compute='_help_msg')
     state = fields.Selection(selection_add=[('completed', 'Completed')])
+    signee = fields.Char()
     signature = fields.Binary()
 
     def _dest_project(self):

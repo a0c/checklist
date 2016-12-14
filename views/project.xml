@@ -39,6 +39,7 @@
         <button name="reset_project" position="replace"/>
         <page name="project_stages" position="after">
           <page name="project_signature" string="Signature">
+            <field name="signee" placeholder="Signee..."/>
             <field name="signature" widget='image' nolabel="1"/>
           </page>
         </page>

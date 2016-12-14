@@ -2,9 +2,27 @@
 <openerp>
   <data noupdate="0">
 
+    <record id="module_category_checklist_management" model="ir.module.category">
+      <field name="name">Checklist</field>
+      <field name="sequence">3</field>
+    </record>
+    <record id="group_checklist_workshop_user" model="res.groups">
+      <field name="name">Workshop User</field>
+      <field name="category_id" ref="checklist.module_category_checklist_management"/>
+    </record>
+    <record id="group_checklist_mobile_user" model="res.groups">
+      <field name="name">Mobile User</field>
+      <field name="category_id" ref="checklist.module_category_checklist_management"/>
+    </record>
+    <record id="group_checklist_manager" model="res.groups">
+      <field name="name">Manager</field>
+      <field name="category_id" ref="checklist.module_category_checklist_management"/>
+      <field name="implied_ids" eval="[(4, ref('group_checklist_workshop_user')),(4, ref('group_checklist_mobile_user'))]"/>
+      <field name="users" eval="[(4, ref('base.user_root'))]"/>
+    </record>
     <record id="group_reload_checklists_on_assigning" model="res.groups">
       <field name="name">Reload Checklists on Assigning</field>
-      <field name="category_id" ref="base.module_category_hidden"/>
+      <field name="category_id" ref="checklist.module_category_checklist_management"/>
     </record>
 
   </data>

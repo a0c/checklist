@@ -2,6 +2,12 @@
 <openerp>
   <data>
 
+    <!-- Top menu item -->
+    <menuitem name="Checklist" id="menu_main_checklist" groups="group_checklist_workshop_user,group_checklist_mobile_user" sequence="45"/>
+
+    <menuitem name="Checklists" id="menu_checklists" parent="menu_main_checklist" sequence="1"/>
+    <menuitem name="Configuration" id="menu_checklists_config" parent="menu_main_checklist" groups="group_checklist_manager" sequence="60"/>
+
     <record id="edit_project" model="ir.ui.view">
       <field name="name">project.project.form</field>
       <field name="model">project.project</field>
@@ -64,11 +70,6 @@
         </field>
       </field>
     </record>
-
-    <menuitem name="Workshop"
-              id="menu_workshop_management"
-              parent="base.menu_main_pm"
-              sequence="10"/>
 
     <record id="action_view_workshop_job_tasks" model="ir.actions.act_window">
       <field name="name">Tasks</field>
@@ -146,7 +147,7 @@
     </record>
 
     <record id="open_view_workshop_jobs_all" model="ir.actions.act_window">
-      <field name="name">Checklists</field>
+      <field name="name">Workshop Checklists</field>
       <field name="res_model">project.project</field>
       <field name="view_type">form</field>
       <field name="domain">['|',('quant','!=',False),('state','=','template')]</field>
@@ -164,7 +165,7 @@
         }</field>
     </record>
 
-    <menuitem action="open_view_workshop_jobs_all" id="menu_workshop_jobs" parent="menu_workshop_management" sequence="10"/>
+    <menuitem action="open_view_workshop_jobs_all" id="menu_workshop_jobs" parent="menu_checklists" groups="group_checklist_workshop_user" sequence="10"/>
 
     <record id="action_view_workshop_task" model="ir.actions.act_window">
       <field name="name">Tasks</field>
@@ -173,7 +174,6 @@
       <field name="search_view_id" ref="project.view_task_search_form"/>
       <field name="context">{'search_default_todo': 1, 'tracking_disable': True}</field>
     </record>
-    <menuitem action="action_view_workshop_task" id="menu_action_view_workshop_task" parent="menu_workshop_management" sequence="20"/>
 
     <record id="view_task_tree2" model="ir.ui.view">
       <field name="name">project.task.tree</field>
@@ -234,7 +234,7 @@
         }</field>
     </record>
     <menuitem action="action_view_workshop_task_create_template" id="menu_action_view_workshop_task_create_template"
-              parent="menu_workshop_management" sequence="30"/>
+              parent="menu_checklists_config" sequence="10"/>
 
   </data>
 </openerp>

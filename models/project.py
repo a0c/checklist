@@ -234,7 +234,7 @@ class task(models.Model):
             if x.next_task:
                 x.next_task.start_task(started)
             else:
-                x.project_id.write({'state': 'close', 'date': vals['date_end']})
+                x.project_id.write({'state': 'completed', 'date': vals['date_end']})
                 # todo: TMP DISABLED
                 # x._move_quant_to_runup()
         return True

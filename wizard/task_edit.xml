@@ -6,7 +6,7 @@
       <field name="name">task.edit.form</field>
       <field name="model">task.edit</field>
       <field name="arch" type="xml">
-        <form string="Edit Task">
+        <form string="Add a Note">
           <group>
             <field name="description" nolabel="1"/>
           </group>
@@ -19,7 +19,7 @@
       </field>
     </record>
 
-    <act_window name="Edit Task"
+    <act_window name="Add a Note"
                 res_model="task.edit"
                 src_model="project.task"
                 key2="client_action_multi"
@@ -36,7 +36,7 @@
       <field name="arch" type="xml">
         <field name="name" position="after">
           <field name="description"/>
-          <button name="%(action_task_edit)d" string="Edit Description" type="action" icon="gtk-edit" context="{'tracking_disable': True}"/>
+          <button name="%(action_task_edit)d" string="Add a Note" type="action" icon="gtk-edit" context="{'tracking_disable': True}"/>
         </field>
       </field>
     </record>

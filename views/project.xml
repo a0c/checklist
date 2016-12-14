@@ -65,8 +65,22 @@
         <field name="project_id" position="attributes">
           <attribute name="context">{'default_use_tasks':1, 'with_qid':1, 'tasks_as_list': 1}</attribute>
         </field>
+        <field name="description" position="attributes">
+          <attribute name="readonly">1</attribute>
+        </field>
         <field name="description" position="after">
           <field name="notes" placeholder="Add a Note..."/>
+        </field>
+      </field>
+    </record>
+    <record id="view_task_form2_manager" model="ir.ui.view">
+      <field name="name">project.task.manager.form</field>
+      <field name="model">project.task</field>
+      <field name="inherit_id" ref="view_task_form2"/>
+      <field name="groups_id" eval="[(6, 0, [ref('group_checklist_manager')])]"/>
+      <field name="arch" type="xml">
+        <field name="description" position="attributes">
+          <attribute name="readonly"/>
         </field>
       </field>
     </record>
@@ -209,7 +223,7 @@
     <record id="view_task_form2_create_template" model="ir.ui.view">
       <field name="name">project.task.form</field>
       <field name="model">project.task</field>
-      <field name="inherit_id" ref="view_task_form2"/>
+      <field name="inherit_id" ref="view_task_form2_manager"/>
       <field name="mode">primary</field>
       <field name="arch" type="xml">
         <field name="project_id" position="attributes">

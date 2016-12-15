@@ -136,6 +136,10 @@ class project(models.Model):
         if assignee:
             self.write({'user_id': assignee})
 
+    @api.multi
+    def action_complete(self):
+        self.write({'state': 'completed', 'date': fmt(datetime.now())})
+
 
 class task(models.Model):
     _inherit = 'project.task'
@@ -233,9 +237,9 @@ class task(models.Model):
             x.write(vals)
             if x.next_task:
                 x.next_task.start_task(started)
-            else:
-                x.project_id.write({'state': 'completed', 'date': vals['date_end']})
-                # todo: TMP DISABLED
+            # todo: TMP DISABLED
+            # else:
+                # x.project_id.action_complete()
                 # x._move_quant_to_runup()
         return True
 

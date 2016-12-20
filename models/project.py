@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 
 from openerp import api, fields, models
 from openerp.osv import fields as fields_old
@@ -6,9 +7,19 @@ from openerp.tools.safe_eval import safe_eval as eval
 
 from openerp.addons.checklist.models.utils import prs, fmt, diff
 
+_logger = logging.getLogger(__name__)
+
 
 def not_checklist(vals):
     return not vals.get('quant')
+
+
+def hours_from_string(time_string):
+    parts = time_string.split(':')
+    hours = parts[0] if len(parts) > 0 else 0.0
+    mins = parts[1] if len(parts) > 1 else 0.0
+    secs = parts[2] if len(parts) > 2 else 0.0
+    return float(hours) + float(mins) / 60.0 + float(secs) / 3600.0
 
 
 class project(models.Model):
@@ -148,6 +159,7 @@ class task(models.Model):
     show_button_done = fields.Boolean(compute='_show_buttons')
     show_button_skip = fields.Boolean(compute='_show_buttons')
     next_task = fields.Many2one('project.task', compute='_next_task')
+    extra_hours = fields.Char('Extra Hours', compute='_get_extra_hours', inverse='_set_extra_hours')
 
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
         """ take default_active from context """
@@ -186,6 +198,23 @@ class task(models.Model):
     def _next_task(self):
         for x in self:
             x.next_task = next((t for t in x.project_id.tasks if t.sequence > x.sequence), False)
+
+    def _get_extra_hours(self):
+        for x in self:
+            x.extra_hours = x.work_ids and x.work_ids[-1].hours or ''
+
+    def _set_extra_hours(self):
+        for x in self:
+            if not x.extra_hours: continue
+            try:
+                extra_hours = hours_from_string(x.extra_hours)
+            except:
+                _logger.warn("Could not parse extra_hours '%s'" % x.extra_hours)
+                continue
+            if x.work_ids:
+                x.work_ids[-1].hours = extra_hours
+            else:
+                x.work_ids = [(0, 0, {'name': 'EXTRA', 'hours': extra_hours})]
 
     @api.model
     def stage_find(self, cases, section_id, domain=[], order='sequence'):

@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 
 
 def not_checklist(vals):
-    return not vals.get('quant')
+    return not (vals.get('quant') or vals.get('rh_job_number'))
 
 
 def hours_from_string(time_string):
@@ -26,6 +26,9 @@ class project(models.Model):
     _inherit = 'project.project'
 
     quant = fields.Many2one('stock.quant', readonly=1)
+    rh_job_number = fields.Integer('RH Job Number', readonly=1)
+    rh_job_date = fields.Date('RH Job Date', readonly=1)
+    contact = fields.Many2one('res.partner')
     products = fields.Many2many('product.product', 'project_product_rel', 'project_id', 'product_id', 'Models')
     template = fields.Many2one('project.project', 'Use Checklist', domain=[('state', '=', 'template')])
     template_members = fields.Many2many('res.users', related='template.members')
@@ -71,7 +74,7 @@ class project(models.Model):
 
     @api.multi
     def checklists(self):
-        return self.filtered(lambda x: x.quant)
+        return self.filtered(lambda x: x.quant or x.rh_job_number)
 
     def _update_checklists(self, vals):
         """ must be called after super().write()/create(), because we read user_id/template here """
@@ -96,7 +99,7 @@ class project(models.Model):
     def copy_template_vals(self, vals):
         template = self.template
         vals.update({
-            'name': '%s #%s' % (template.name or '', self.quant.id),
+            'name': '%s %s' % (template.name or '', self.quant and '#%s' % self.quant.id or self.rh_job_number),
             'parent_id': template.parent_id.id,
             'planned_hours': template.planned_hours,
             'color': template.color,

@@ -1,4 +1,14 @@
 openerp.checklist = function (instance) {
+    instance.web.form.FieldText.include({
+        initialize_content: function() {
+            this._super();
+            if (! this.get("effective_readonly")) {
+                if (this.default_height === '60px') {
+                    this.$textarea.attr('rows', 3);
+                }
+            }
+        },
+    });
     instance.web_kanban.KanbanGroup.include({
         compute_cards_auto_height: function() {
             if (!this.view.group_by) {

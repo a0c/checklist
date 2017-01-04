@@ -1,3 +1,4 @@
 import workshop_quants
 import task_edit
 import create_checklist_template
+import create_onsite_checklist

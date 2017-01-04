@@ -3,6 +3,7 @@
   <data>
     <template id="assets_backend" name="checklist assets" inherit_id="stock.assets_backend">
       <xpath expr="." position="inside">
+        <link rel="stylesheet" href="/checklist/static/src/css/checklist.css"/>
         <script type="text/javascript" src="/checklist/static/src/js/checklist.js"></script>
       </xpath>
     </template>

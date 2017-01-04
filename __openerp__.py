@@ -9,7 +9,7 @@ Checklists TMP
 ==============
 """,
     'depends': [
-        'base', 'stock', 'project', 'document'
+        'base', 'stock', 'project', 'document', 'base_external_dbsource'
     ],
     'data': [
         'security/security.xml',
@@ -17,9 +17,11 @@ Checklists TMP
         'static/src/xml/checklist_backend.xml',
         'views/res_users.xml',
         'views/project.xml',
+        'views/partner.xml',
         'wizard/workshop_quants.xml',
         'wizard/task_edit.xml',
         'wizard/create_checklist_template.xml',
+        'wizard/create_onsite_checklist.xml',
         'views/migration.xml',
     ],
     'qweb': [

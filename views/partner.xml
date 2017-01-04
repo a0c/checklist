@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="view_partner_form" model="ir.ui.view">
+      <field name="name">res.partner.form</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_form"/>
+      <field name="arch" type="xml">
+        <field name="parent_id" position="before">
+          <field name="hint_several" class="alert alert-info" attrs="{'invisible': [('hint_several','=',False)]}"/>
+        </field>
+      </field>
+    </record>
+
+  </data>
+</openerp>

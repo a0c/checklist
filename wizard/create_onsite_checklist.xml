@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="view_onsite_job_create" model="ir.ui.view">
+      <field name="name">Create On-Site Checklist</field>
+      <field name="model">create.onsite.checklist</field>
+      <field name="arch" type="xml">
+        <form string="Create On-Site Checklist">
+          <group>
+            <group string="Select Job">
+              <field name="rh_job_number"/>
+              <field name="rh_job_date" context="{'load_from_rh': 1}"/>
+              <label for="destination"/>
+              <div>
+                <field name="hint_several" class="alert alert-info" attrs="{'invisible': [('hint_several','=',False)]}"/>
+                <field name="hint_mismatch" class="alert alert-danger" attrs="{'invisible': [('hint_mismatch','=',False)]}"/>
+                <field name="hint_new" class="alert alert-success" attrs="{'invisible': [('hint_new','=',False)]}"/>
+                <field name="destination" context="{'default_street': dest_street, 'default_street2': dest_street2, 'default_city': dest_city, 'default_state_id': dest_state, 'default_zip': dest_zip, 'default_country_id': dest_country, 'default_customer': 1}"/>
+              </div>
+              <label for="contact"/>
+              <div>
+                <field name="hint_several_cont" class="alert alert-info" attrs="{'invisible': [('hint_several_cont','=',False)]}"/>
+                <field name="hint_mismatch_cont" class="alert alert-danger" attrs="{'invisible': [('hint_mismatch_cont','=',False)]}"/>
+                <field name="hint_new_cont" class="alert alert-success" attrs="{'invisible': [('hint_new_cont','=',False)]}"/>
+                <field name="contact" context="{'default_phone': cont_phone, 'default_type': 'contact'}"/>
+              </div>
+              <field name="user" options="{'no_create': True}"/>
+            </group>
+            <group string="Select Checklist">
+              <field name="quant" context="{'with_qid': 1}" nolabel="1" colspan="2" placeholder="# QID (if known)" options="{'no_create': True}"/>
+              <field name="customer" options="{'no_create': True}"/>
+              <field name="product" options="{'no_create': True}"/>
+              <field name="checklist" options="{'no_create': True}" context="{'form_view_ref': 'checklist.edit_project'}"/>
+              <field name="description" class="oe_low_text"/>
+            </group>
+            <group string="Destination (RH)">
+              <field name="dest_name" placeholder="Type here to auto-complete Destination..."/>
+              <label for="dest_street" string="Address"/>
+              <div>
+                <field name="dest_street" placeholder="Street..."/>
+                <field name="dest_street2"/>
+                <div class="address_format">
+                  <field name="dest_city" placeholder="City" style="width: 40%%"/>
+                  <field name="dest_state" placeholder="State" style="width: 37%%" class="oe_no_button" options='{"no_open": True}'/>
+                  <field name="dest_zip" placeholder="ZIP" style="width: 20%%"/>
+                </div>
+                <field name="dest_country" placeholder="Country" class="oe_no_button" options='{"no_open": True, "no_create": True}'/>
+              </div>
+            </group>
+            <group string="Destination Found (Odoo)">
+              <field name="found_name" required="0"/>
+              <label for="found_street" string="Address"/>
+              <div>
+                <field name="found_street" placeholder="Street..."/>
+                <field name="found_street2"/>
+                <div class="address_format">
+                  <field name="found_city" placeholder="City" style="width: 40%%"/>
+                  <field name="found_state" placeholder="State" style="width: 37%%" class="oe_no_button" options='{"no_open": True}'/>
+                  <field name="found_zip" placeholder="ZIP" style="width: 20%%"/>
+                </div>
+                <field name="found_country" placeholder="Country" class="oe_no_button" options='{"no_open": True, "no_create": True}'/>
+              </div>
+            </group>
+            <group string="Contact (RH)">
+              <field name="cont_name" placeholder="Type here to auto-complete Contact..."/>
+              <field name="cont_phone"/>
+            </group>
+            <group string="Contact Found (Odoo)">
+              <field name="found_cont_name"/>
+              <field name="found_cont_phone"/>
+            </group>
+          </group>
+          <footer>
+            <button name="create_checklist" string="Create Checklist" type="object" class="oe_highlight"/>
+            or
+            <button string="Cancel" class="oe_link" special="cancel"/>
+          </footer>
+        </form>
+      </field>
+    </record>
+
+    <act_window name="Create On-Site Checklist"
+                res_model="create.onsite.checklist"
+                view_mode="form"
+                view_type="form"
+                target="new"
+                id="action_onsite_job_create"/>
+
+    <menuitem action="action_onsite_job_create" id="menu_onsite_job_create" parent="menu_checklists" groups="group_checklist_mobile_user" sequence="60"/>
+
+  </data>
+</openerp>

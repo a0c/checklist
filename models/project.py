@@ -31,13 +31,19 @@ class project(models.Model):
     contact = fields.Many2one('res.partner')
     products = fields.Many2many('product.product', 'project_product_rel', 'project_id', 'product_id', 'Models')
     template = fields.Many2one('project.project', 'Use Checklist', domain=[('state', '=', 'template')])
-    template_members = fields.Many2many('res.users', related='template.members')
+    template_members = fields.Many2many('res.users', compute='_template_members')
     dest_project = fields.Many2one('project.project', compute='_dest_project')
     task_count_all = fields.Integer(compute='_task_count_all')
     help_msg = fields.Text(compute='_help_msg')
     state = fields.Selection(selection_add=[('completed', 'Completed')])
     signee = fields.Char()
     signature = fields.Binary()
+
+    def _template_members(self):
+        for x in self:
+            group = x.quant and 'group_checklist_workshop_user' or x.rh_job_number and 'group_checklist_mobile_user'
+            if group:
+                x.template_members = self.env.ref('checklist.' + group).users
 
     def _dest_project(self):
         for x in self:

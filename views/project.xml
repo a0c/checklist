@@ -86,6 +86,9 @@
       <field name="model">project.task</field>
       <field name="inherit_id" ref="project.view_task_form2"/>
       <field name="arch" type="xml">
+        <field name="stage_id" position="attributes">
+          <attribute name="clickable"></attribute>
+        </field>
         <field name="project_id" position="attributes">
           <attribute name="context">{'default_use_tasks':1, 'with_qid':1, 'tasks_as_list': 1}</attribute>
         </field>

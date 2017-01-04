@@ -18,6 +18,7 @@
       <field name="sequence">25</field>
       <field name="name">Skipped</field>
       <field name="case_default" eval="True"/>
+      <field name="fold" eval="True"/>
     </record>
 
   </data>

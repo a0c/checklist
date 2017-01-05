@@ -253,7 +253,7 @@ class task(models.Model):
     @api.multi
     def action_pause(self):
         end = datetime.now()
-        for x in self.filtered(lambda x: x.work_ids):
+        for x in self.filtered(lambda x: x.work_ids and x.work_ids[0].date):
             start = prs(x.work_ids[0].date)
             x.work_ids[0].hours = diff(start, end).total_seconds() / 3600
 

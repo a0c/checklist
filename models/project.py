@@ -169,6 +169,7 @@ class task(models.Model):
     show_button_skip = fields.Boolean(compute='_show_buttons')
     next_task = fields.Many2one('project.task', compute='_next_task')
     extra_hours = fields.Char('Extra Hours', compute='_get_extra_hours', inverse='_set_extra_hours')
+    is_extra = fields.Boolean(compute='_is_extra')
 
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
         """ take default_active from context """
@@ -224,6 +225,10 @@ class task(models.Model):
                 x.work_ids[-1].hours = extra_hours
             else:
                 x.work_ids = [(0, 0, {'name': 'EXTRA', 'hours': extra_hours})]
+
+    def _is_extra(self):
+        for x in self:
+            x.is_extra = x.create_date > x.project_id.create_date
 
     @api.model
     def stage_find(self, cases, section_id, domain=[], order='sequence'):

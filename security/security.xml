@@ -25,5 +25,12 @@
       <field name="category_id" ref="checklist.module_category_checklist_management"/>
     </record>
 
+    <record id="template_task_manager" model="ir.rule">
+      <field name="name">Template Tasks: Manager</field>
+      <field name="model_id" ref="project.model_project_task"/>
+      <field name="domain_force">[('active','=',False),('project_id','=',False)]</field>
+      <field name="groups" eval="[(4, ref('checklist.group_checklist_manager'))]"/>
+    </record>
+
   </data>
 </openerp>

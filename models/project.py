@@ -160,6 +160,12 @@ class project(models.Model):
     def action_complete(self):
         self.write({'state': 'completed', 'date': fmt(datetime.now())})
 
+    def resequence_from_0(self):
+        for x in self:
+            tasks = x.tasks.sorted(lambda x: x.sequence)
+            for seq, task in enumerate(tasks):
+                task.sequence = seq
+
 
 class task(models.Model):
     _inherit = 'project.task'
@@ -297,6 +303,13 @@ class task(models.Model):
     def _move_quant_to_runup(self):
         quant = self.project_id.quant.with_context(checklist_done=True)
         quant.move_to(quant.location_id.warehouse.wh_runup_loc_id)
+
+    @api.multi
+    def unlink(self):
+        projects = self.mapped('project_id')
+        res = super(task, self).unlink()
+        projects.resequence_from_0()
+        return res
 
 
 class project_task_type(models.Model):

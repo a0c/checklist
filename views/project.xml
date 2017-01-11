@@ -253,6 +253,7 @@
         </field>
         <tree position="attributes">
           <attribute name="reload_on_button">true</attribute>
+          <attribute name="resequence_from_0">true</attribute>
         </tree>
       </field>
     </record>

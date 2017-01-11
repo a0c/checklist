@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="view_add_tasks_to_checklist_template" model="ir.ui.view">
+      <field name="name">Add Tasks to Checklist Template</field>
+      <field name="model">add.tasks.to.checklist.template</field>
+      <field name="arch" type="xml">
+        <form string="Add Tasks to Checklist Template">
+          <group>
+            <field name="tasks" nolabel="1"/>
+          </group>
+          <footer>
+            <button name="add_tasks" string="Add" type="object" class="oe_highlight"/>
+            <button string="Cancel" class="oe_link" special="cancel"/>
+          </footer>
+        </form>
+      </field>
+    </record>
+
+  </data>
+</openerp>

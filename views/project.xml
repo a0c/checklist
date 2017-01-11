@@ -73,6 +73,9 @@
             <field name="signature" widget='image' nolabel="1"/>
           </page>
         </page>
+        <button name="set_open" position="before">
+          <button name="action_add_tasks" string="Add Tasks" type="object" states="template" class="oe_highlight" groups="checklist.group_checklist_manager"/>
+        </button>
       </field>
     </record>
 

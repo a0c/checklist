@@ -2,3 +2,4 @@ import workshop_quants
 import task_edit
 import create_checklist_template
 import create_onsite_checklist
+import add_tasks_to_checklist_template

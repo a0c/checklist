@@ -166,6 +166,26 @@ class project(models.Model):
             for seq, task in enumerate(tasks):
                 task.sequence = seq
 
+    @api.multi
+    def action_add_tasks(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'res_model': 'add.tasks.to.checklist.template',
+            'name': 'Add Tasks to Checklist Template',
+            'target': 'new',
+            'context': {'default_project': self.id}
+        }
+
+    @api.multi
+    def add_tasks(self, tasks):
+        for x in self.with_context(active_test=0, tracking_disable=1):
+            old_tasks = x.tasks.sorted(lambda x: x.sequence)
+            start = old_tasks and old_tasks[-1].sequence + 1 or 0
+            for seq, task in enumerate(tasks, start=start):
+                task.copy({'project_id': x.id, 'sequence': seq, 'name': task.name, 'stage_id': task.stage_id.id})
+
 
 class task(models.Model):
     _inherit = 'project.task'

@@ -22,6 +22,7 @@ Checklists TMP
         'wizard/task_edit.xml',
         'wizard/create_checklist_template.xml',
         'wizard/create_onsite_checklist.xml',
+        'wizard/add_tasks_to_checklist_template.xml',
         'views/migration.xml',
     ],
     'qweb': [

@@ -241,7 +241,7 @@ class task(models.Model):
 
     def _set_extra_hours(self):
         for x in self:
-            if not x.extra_hours: continue
+            if not (x.extra_hours and x.is_extra): continue
             try:
                 extra_hours = hours_from_string(x.extra_hours)
             except:

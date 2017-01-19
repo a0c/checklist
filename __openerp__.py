@@ -9,10 +9,11 @@ Checklists TMP
 ==============
 """,
     'depends': [
-        'base', 'stock', 'project', 'document', 'base_external_dbsource'
+        'base', 'stock', 'project', 'project_issue', 'document', 'base_external_dbsource'
     ],
     'data': [
         'security/security.xml',
+        'security/ir.model.access.csv',
         'data/project_data.xml',
         'static/src/xml/checklist_backend.xml',
         'views/res_users.xml',
